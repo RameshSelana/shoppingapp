@@ -16,6 +16,8 @@ public class Cart {
 	private int totalItems;
 	
 	private double totalPrice;
+	
+	private double totalDiscount;
 
 	private List<CartItem> cartItems;
 

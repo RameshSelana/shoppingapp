@@ -18,20 +18,20 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 
-@Api(tags = "Checkout Item API")
+@Api(tags = "Checkout Item API V2 which offers discount on price.")
 @RestController
-@RequestMapping("/v1/checkout/item")
+@RequestMapping("/v2/checkout/item")
 @RequiredArgsConstructor
-public class CheckoutControllerV1 {
+public class CheckoutControllerV2 {
 
 	@Autowired
 	private CheckoutService checkoutService;
 
-	@ApiOperation(value = "Checkout list of selected items")
+	@ApiOperation(value = "Checkout list of selected items with given discount percent on items.")
 	@PostMapping
 	public ResponseEntity<Cart> doCheckoutItem(@RequestBody final List<String> items) {
 
-		Optional<Cart> cart = checkoutService.doCheckoutItems(items);
+		Optional<Cart> cart = checkoutService.doCheckoutItemsWithDiscount(items);
 
 		return new ResponseEntity<>(cart.get(), HttpStatus.OK);
 	}

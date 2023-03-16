@@ -8,4 +8,6 @@ import com.shopping.service.checkout.dto.Cart;
 public interface CheckoutService{
 	
 	public Optional<Cart> doCheckoutItems(List<String> items);
+
+	public Optional<Cart> doCheckoutItemsWithDiscount(List<String> items);
 }

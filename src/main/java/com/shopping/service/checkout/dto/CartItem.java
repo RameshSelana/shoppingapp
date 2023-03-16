@@ -13,6 +13,10 @@ public class CartItem {
 
 	private String item;
 
-	private long price;
+	private double price;
+	
+	private double discountPercent;
+	
+	private double discountedPrice;
 	
 }

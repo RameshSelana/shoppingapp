@@ -20,6 +20,8 @@ public class Item {
 	private String itemName;
 
 	@Column(name = "ITEM_PRICE")
-	private long price;
+	private double price;
 
+	@Column(name = "ITEM_DISCOUNT")
+	private double discount;
 }

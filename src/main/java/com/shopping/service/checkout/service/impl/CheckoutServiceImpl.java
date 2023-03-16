@@ -21,24 +21,49 @@ public class CheckoutServiceImpl implements CheckoutService {
 
 	@Override
 	public Optional<Cart> doCheckoutItems(List<String> items) {
-
 		// Create Cart with Items
-		Cart cart =createCart(items);
+		Cart cart = buildCart(items);
 		return Optional.ofNullable(cart);
 	}
 
-	private Cart createCart(List<String> items) {
+	private Cart buildCart(List<String> items) {
 		Cart cart = Cart.builder().cartItems(new ArrayList<CartItem>()).build();
 		items.stream().forEach(item -> {
 			CartItem cartItem = CartItem.builder().item(item).build();
-			Optional<Item> itemEntity= this.chekoutRepo.getItemByItemName(item.toUpperCase());
+			Optional<Item> itemEntity = this.chekoutRepo.getItemByItemName(item.toUpperCase());
 			cartItem.setPrice(itemEntity.get().getPrice());
-			cart.setTotalPrice(cart.getTotalPrice()+itemEntity.get().getPrice());
+			cart.setTotalPrice(cart.getTotalPrice() + cartItem.getPrice());
 			cart.getCartItems().add(cartItem);
 		});
 		cart.setTotalItems(cart.getCartItems().size());
 		return cart;
+	}
 
+	private Cart buildCartWithDiscount(List<String> items) {
+		Cart cart = Cart.builder().cartItems(new ArrayList<CartItem>()).build();
+		items.stream().forEach(item -> {
+			CartItem cartItem = CartItem.builder().item(item).build();
+			Optional<Item> itemEntity = this.chekoutRepo.getItemByItemName(item.toUpperCase());
+			cartItem.setPrice(itemEntity.get().getPrice());
+			cartItem.setDiscountPercent(itemEntity.get().getDiscount());
+			cartItem.setDiscountedPrice(calculateDiscount(itemEntity.get().getPrice(), itemEntity.get().getDiscount()));
+			cart.setTotalPrice(cart.getTotalPrice() + cartItem.getPrice());
+			cart.setTotalDiscount(cart.getTotalDiscount() + cartItem.getDiscountedPrice());
+			cart.getCartItems().add(cartItem);
+		});
+		cart.setTotalItems(cart.getCartItems().size());
+		return cart;
+	}
+
+	private double calculateDiscount(double price, double discountPercent) {
+		return (price * discountPercent) / 100;
+	}
+
+	@Override
+	public Optional<Cart> doCheckoutItemsWithDiscount(List<String> items) {
+		// Create Cart with Items
+		Cart cart = buildCartWithDiscount(items);
+		return Optional.ofNullable(cart);
 	}
 
 }
